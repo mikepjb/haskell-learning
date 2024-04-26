@@ -32,6 +32,7 @@ executable haskell-learning
                     , prelude-compat
                     , aeson
                     , servant-server
+                    , warp
 
     -- Directories containing source files.
     hs-source-dirs:   app
