@@ -1,9 +1,8 @@
-.PHONY: build
+.PHONY: run
 
 # would be awesome to also `nix-shell -p cabal-install ghc`
-build:
-	mkdir -p ./dist ./tmp
-	ghc -outputdir ./tmp -o ./dist/hello ./hello.hs
+run:
+	cabal run
 
 clean:
 	rm -rf ./dist ./tmp
