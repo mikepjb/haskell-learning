@@ -5,5 +5,6 @@ myNixPkgs.mkShell {
   nativeBuildInputs = with myNixPkgs; [
     cabal-install # terminal app cabal
     ghc # Haskell compiler
+    haskell-language-server # Haskell LSP
   ];
 }
