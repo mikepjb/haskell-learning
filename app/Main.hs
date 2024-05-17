@@ -1,43 +1,30 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use lambda-case" #-}
 module Main where
 
-import GHC.Generics
-import Data.Time.Calendar
-import Servant
-import Data.Aeson
-import Network.Wai.Handler.Warp
+newtype Parser a = Parser
+  { runParser :: [Char] -> Maybe (a, [Char])
+  }
 
-type MessageAPI = "messages" :> Get '[JSON] [Message]
+satisfy :: (Char -> Bool) -> Parser Char
+satisfy predicate = Parser $ \input ->
+  case input of
+    [] -> Nothing
+    (x:xs) -> if predicate x then Just (x, xs) else Nothing
 
-data Message = Message
-    { user :: String
-    , message :: String
-    , created_at :: Day
-} deriving (Eq, Show, Generic)
+char :: Char -> Parser Char
+char i = satisfy (== i)
 
-instance ToJSON Message
+instance Functor Parser where
+  fmap f parser = _
 
-messages :: [Message]
-messages =
-    [ Message "oli1" "hello!" (fromGregorian 1683 3 1)
-    , Message "oli2" "hello there other oli!!" (fromGregorian 1683 3 1)
-    ]
-
-server :: Server MessageAPI
-server = return messages
-
-messageAPI :: Proxy MessageAPI
-messageAPI = Proxy
-
-app :: Application
-app = serve messageAPI server
 
 main :: IO ()
-main = run 8081 app
+main = do
+  line <- getLine
+  readAndEvalLine line
+  main
+  
+readAndEvalLine :: Monad m => p -> m ()
+readAndEvalLine line = return ()
+
